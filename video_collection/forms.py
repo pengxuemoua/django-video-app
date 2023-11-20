@@ -6,3 +6,7 @@ class VideoForm(forms.ModelForm):
     class Meta:
         model = Video 
         fields = ['name', 'url', 'notes'] # put fields from Video model into a list
+
+
+class SearchForm(forms.Form):
+    search_term = forms.CharField()
