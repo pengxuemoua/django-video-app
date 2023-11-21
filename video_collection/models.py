@@ -11,10 +11,21 @@ class Video(models.Model):
     def save(self, *args, **kwargs): # overwrite django's save method
         
         # extract video id from youtube url
-        if not self.url.startswith('https://www.youtube.com/watch'): # checks that url is youtube
-            raise ValidationError(f'Invalid YouTube URL {self.url}')
+        # if not self.url.startswith('https://www.youtube.com/watch'): # checks that url is youtube
+        #     raise ValidationError(f'Invalid YouTube URL {self.url}')
 
         url_components = parse.urlparse(self.url)
+
+        if url_components.scheme != 'https':
+            raise ValidationError(f'Invalid YouTube URL {self.url}')
+        
+        if url_components.netloc != 'www.youtube.com':
+            raise ValidationError(f'Invalid YouTube URL {self.url}')
+        
+        if url_components.path != '/watch':
+            raise ValidationError(f'Invalid YouTube URL {self.url}')
+
+
         query_string = url_components.query # string will include v query string
         if not query_string: # raise exception if there is no query string
             raise ValidationError(f'Invalid YouTube URL {self.url}')
